@@ -38,10 +38,15 @@ config.tasks = [0,1,2,3]
 ## MNIST toy experiment
 
 Requirement:
+
  python3.6.9
+
  torch
+
  tqdm
+
  matplotlib
+ 
  sklearn
 
 Training:
