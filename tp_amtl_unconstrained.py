@@ -3,7 +3,7 @@ import numpy as np
 import pdb
 
 
-class TP_AMTL_VARIANCE(object):
+class TP_AMTL_UNCONSTRAINED(object):
     def __init__(self, config):
         for name in config.__dict__:
             setattr(self,name,getattr(config,name))

@@ -2,7 +2,7 @@
 config = lambda: None
 
 # Experiment setup
-config.mtl_model = "tp_amtl"
+config.mtl_model = "tp_amtl_unconstrained"
 
 #config.task_code = "mimic_infection"
 config.task_code = "physionet2012"

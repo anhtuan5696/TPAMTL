@@ -3,7 +3,7 @@ import numpy as np
 import pdb
 
 
-class TP_AMTL_VARIANCE(object):
+class AMTL_SAMESTEP(object):
     def __init__(self, config):
         for name in config.__dict__:
             setattr(self,name,getattr(config,name))
@@ -37,7 +37,7 @@ class TP_AMTL_VARIANCE(object):
             helper = np.zeros([self.num_steps,self.num_steps])
             for i in range(self.num_steps):
                 for j in range(self.num_steps):
-                    if i=j:
+                    if i==j:
                         helper[i][j] = 1.0
             helper = tf.convert_to_tensor(helper,dtype=tf.float32)
             

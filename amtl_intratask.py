@@ -3,7 +3,7 @@ import numpy as np
 import pdb
 
 
-class TP_AMTL_VARIANCE(object):
+class AMTL_INTRATASK(object):
     def __init__(self, config):
         for name in config.__dict__:
             setattr(self,name,getattr(config,name))
