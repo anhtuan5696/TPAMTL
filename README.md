@@ -17,7 +17,7 @@ To train the models in the paper, run this command:
 ```train
 python run.py
 ```
-Also for P-AMTL experiment on MNIST-variant dataset, you can run the same command inside [MNIST](/MNIST) directory.
+Also for P-AMTL experiment on MNIST-variant dataset, you can run the same command inside [MNIST](/MNIST) directory. Please see MNIST Toy experiment section below for details.
 
 Please look up and modify [config.py](config.py) for selecting base model and datasets. For example, if you want to run tp_amtl model on physionet2012 dataset, you can modify [config.py](config.py) as follows:
 
@@ -33,6 +33,22 @@ For single-task version of UA,LSTM and RETAIN model, you can simply select confi
 
 ```config
 config.tasks = [0,1,2,3]
+```
+
+## MNIST toy experiment
+
+Requirement:
+ python3.6.9
+ torch
+ tqdm
+ matplotlib
+ sklearn
+
+Training:
+ Please download mnist_rotation_back_image_new.zip (https://sites.google.com/a/lisa.iro.umontreal.ca/public_static_twiki/variations-on-the-mnist-digits) into a folder named mnist_rotation_back inside the MNIST directory and unzip. Then run this command:
+
+```train_mnist
+python run.py
 ```
 
 ## Datasets
