@@ -1,0 +1,6 @@
+**/saved
+*.jpg
+*.png
+*.pyc
+*.py~
+*.pkl
