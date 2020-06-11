@@ -113,7 +113,7 @@ class TP_AMTL_1(object):
                         W = tf.get_variable('weight_'+str(i),[self.num_hidden,self.num_hidden])
                         B = tf.get_variable('bias_'+str(i),[self.num_hidden])
                         W = tf.nn.dropout(W,keep_prob=self.keep_prob)     
-                        f = tf.nn.leaky_relu(tf.matmul(f,W),B)
+                        f = tf.nn.leaky_relu(tf.matmul(f,W)+B)
                                             
 
                 self.beta_output.append(tf.reshape(f,[-1,self.num_steps,self.num_hidden]))

@@ -112,28 +112,28 @@ class TP_AMTL_2(object):
                         W = tf.get_variable('weight_'+str(i),[self.num_hidden,self.num_hidden])
                         B = tf.get_variable('bias_'+str(i),[self.num_hidden])
                         W = tf.nn.dropout(W,keep_prob=self.keep_prob)     
-                        f = tf.nn.leaky_relu(tf.matmul(f,W),B)
+                        f = tf.nn.leaky_relu(tf.matmul(f,W)+B)
                         
                     W_loc1 = tf.get_variable('weight_loc1',[self.num_hidden,self.num_hidden])
                     B_loc1 = tf.get_variable('bias_loc1',[self.num_hidden])
                     W_loc1 = tf.nn.dropout(W_loc1,keep_prob=self.keep_prob)     
-                    beta_loc = tf.nn.leaky_relu(tf.matmul(f,W_loc1),B_loc1)
+                    beta_loc = tf.nn.leaky_relu(tf.matmul(f,W_loc1)+B_loc1)
 
                     W_loc2 = tf.get_variable('weight_loc2',[self.num_hidden,self.num_hidden])
                     B_loc2 = tf.get_variable('bias_loc2',[self.num_hidden])
                     W_loc2 = tf.nn.dropout(W_loc2,keep_prob=self.keep_prob)     
-                    beta_loc = tf.nn.leaky_relu(tf.matmul(beta_loc,W_loc2),B_loc2)
+                    beta_loc = tf.nn.leaky_relu(tf.matmul(beta_loc,W_loc2)+B_loc2)
 
                     beta_loc = tf.reshape(beta_loc,[-1,self.num_steps,self.num_hidden])
 
                     W_scale1 = tf.get_variable('weight_scale1',[self.num_hidden,self.num_hidden])
                     B_scale1 = tf.get_variable('bias_scale1',[self.num_hidden])
                     W_scale1 = tf.nn.dropout(W_scale1,keep_prob=self.keep_prob)     
-                    beta_scale = tf.nn.leaky_relu(tf.matmul(f,W_scale1),B_scale1)
+                    beta_scale = tf.nn.leaky_relu(tf.matmul(f,W_scale1)+B_scale1)
                     W_scale2 = tf.get_variable('weight_scale2',[self.num_hidden,self.num_hidden])
                     B_scale2 = tf.get_variable('bias_scale2',[self.num_hidden])
                     W_scale2 = tf.nn.dropout(W_scale2,keep_prob=self.keep_prob)     
-                    beta_scale = tf.nn.leaky_relu(tf.matmul(beta_scale,W_scale2),B_scale2)
+                    beta_scale = tf.nn.leaky_relu(tf.matmul(beta_scale,W_scale2)+B_scale2)
                     beta_scale = tf.reshape(beta_scale,[-1,self.num_steps,self.num_hidden])
 
                     beta_output = tf.distributions.Normal(beta_loc,beta_scale).sample()

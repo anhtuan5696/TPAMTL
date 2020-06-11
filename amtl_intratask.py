@@ -62,7 +62,7 @@ class AMTL_INTRATASK(object):
         with tf.variable_scope('transfer_to%d'%(to_task),reuse=tf.AUTO_REUSE):
             transfer_amount = tf.layers.dense(transfer_amount,self.num_hidden,activation=tf.nn.leaky_relu,use_bias=True,name="layer1")
         
-        return transfer_sum
+        return transfer_amount
 
 
     def build_model(self, use_lstm=True):

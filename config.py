@@ -2,11 +2,12 @@
 config = lambda: None
 
 # Experiment setup
-config.mtl_model = "tp_amtl_unconstrained"
+config.mtl_model = "tp_amtl"
 
 #config.task_code = "mimic_infection"
 config.task_code = "physionet2012"
 #config.task_code = "mimic_heartfailure"
+#config.task_code = "mimic_respiratoryfailure"
 
 config.tasks = None
 # for single-task version of UA,LSTM and RETAIN model, simply select config.tasks = [i] where i is the task you want to run (0,1,2,etc.)
