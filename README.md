@@ -21,13 +21,17 @@ Also for P-AMTL experiment on MNIST-variant dataset, you can run the same comman
 
 Please look up and modify [config.py](config.py) for selecting base model and datasets. For example, if you want to run tp_amtl model on physionet2012 dataset, you can modify [config.py](config.py) as follows:
 
-
 ```config
 config.mtl_model = "tp_amtl"
 config.task_code = "physionet2012"
 ```
 
-Please put model name on config.mtl_model and dataset on config.task_code (both in lower-case).
+Please put model name on config.mtl_model and dataset on config.task_code (both in lower-case). For tp_amtl (epistemic) and tp_amtl (aleatoric), config.mtl_model input can be written as below:
+
+```config_uc
+config.mtl_model = "tp_amtl_1" #tp_amtl (epistemic)
+config.mtl_model = "tp_amtl_1" #tp_amtl (aleatoric)
+```
 
 For single-task version of UA,LSTM and RETAIN model, you can simply select config.tasks = [i] where i is the task you want to run (0,1,2,etc.). Also, for RETAIN-Kendall model, you need to change config.tasks [i for i in range(len(tasks))] where i is task id (0,1,2, etc.). Below is example for physionet2012 (also can be applied to MIMIC-III Heart Failure).
 
