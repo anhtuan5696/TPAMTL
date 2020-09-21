@@ -70,7 +70,7 @@ net = SAnD(input_features=input_features,
             seq_len=seq_len,
             n_heads=4,
             factor=4,
-            n_class=1,
+            n_class=len(config.tasks),
             n_layers=config.num_layers,
             d_model=config.num_hidden)
 net.to(device)
@@ -86,14 +86,15 @@ if not os.path.isdir(save_path):
 #saver.restore(sess, SAVE_DIR+"retain_mimic1400.ckpt")
 
 def train_epoch():
-    print("Training Model %s for task %s"%\
-                        (config.mtl_model,config.task_code))
+    print("Training SAnD for task %s"%\
+                        (config.task_code))
     total_loss = 0
     for batch_data, batch_labels in tqdm(dataloader["train"],ncols=75):
         batch_data, batch_labels = batch_data.to(device), batch_labels.to(device)
         output = net(batch_data)
         pred = torch.sigmoid(output)
-        loss = F.binary_cross_entropy(pred,batch_labels,reduction='mean')
+        loss = F.binary_cross_entropy(pred,batch_labels,reduction='none')
+        loss = loss.sum(1).mean()
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
@@ -113,14 +114,15 @@ def valid_epoch():
         batch_data, batch_labels = batch_data.to(device), batch_labels.to(device)
         output = net(batch_data)
         pred = torch.sigmoid(output)
-        loss = F.binary_cross_entropy(pred,batch_labels,reduction='mean')
+        loss = F.binary_cross_entropy(pred,batch_labels,reduction='none')
+        loss = loss.sum(1).mean()
 
         total_loss = total_loss + loss.item()
         total_pred.append(pred.to('cpu').data.numpy())
 
     total_loss = total_loss/len(dataloader["valid"])
     total_pred = np.concatenate(total_pred,0)
-    auc = roc_auc_score(valid_y_numpy,total_pred)
+    auc = roc_auc_score(valid_y_numpy,total_pred,average=None)
     print ('loss', total_loss, 'auc', auc)
 
     return total_loss, auc
@@ -155,7 +157,7 @@ def train(e=0):
         print()
     finally:
         print("******RESULT******")
-        print("Valid loss min: %f at epoch %d. AUC is:%f"%(eval_loss_min,epoch_min, eval_total_auc_best))
+        print("Valid loss min: %f at epoch %d. AUC is:, "%(eval_loss_min,epoch_min), eval_total_auc_best)
 
     return best_model_filename
 
@@ -170,14 +172,15 @@ def inference():
         batch_data, batch_labels = batch_data.to(device), batch_labels.to(device)
         output = net(batch_data)
         pred = torch.sigmoid(output)
-        loss = F.binary_cross_entropy(pred,batch_labels,reduction='mean')
+        loss = F.binary_cross_entropy(pred,batch_labels,reduction='none')
+        loss = loss.sum(1).mean()
 
         total_loss = total_loss + loss.item()
         total_pred.append(pred.to('cpu').data.numpy())
 
     total_loss = total_loss/len(dataloader["valid"])
     total_pred = np.concatenate(total_pred,0)
-    auc = roc_auc_score(test_y_numpy,total_pred)
+    auc = roc_auc_score(test_y_numpy,total_pred,average=None)
     print ('loss', total_loss, 'auc', auc)
 
 
