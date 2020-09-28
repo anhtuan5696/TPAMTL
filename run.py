@@ -117,13 +117,8 @@ def valid_epoch():
     total_auc = []
     preds_each = {}
     loss_each = {}
-
-    for s, batch_data, batch_labels in tqdm(enumerate(dataloader["valid"],ncols=75)):
-        feed_dict = {net.x:batch_data, net.y:batch_labels}
-        preds_each[s],loss_each[s] = sess.run([net.preds_each,net.loss_each], feed_dict)
-
-    # for s in range(config.num_samples):
-        # preds_each[s],loss_each[s] = sess.run([net.preds_each,net.loss_each], feed_dict={net.x:valid_x,net.y:valid_y})
+    for s in range(config.num_samples):
+        preds_each[s],loss_each[s] = sess.run([net.preds_each,net.loss_each], feed_dict={net.x:valid_x,net.y:valid_y})
     
     for task_id in range(config.num_tasks):
         preds_s = 0
