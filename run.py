@@ -113,28 +113,36 @@ def train_epoch():
 def valid_epoch():
     print("--------------------------------------------------------")
     print("Performance on valid set")
-    total_loss = 0
-    total_auc = []
-    preds_each = {}
-    loss_each = {}
-    for s in range(config.num_samples):
-        preds_each[s],loss_each[s] = sess.run([net.preds_each,net.loss_each], feed_dict={net.x:valid_x,net.y:valid_y})
-    
-    for task_id in range(config.num_tasks):
-        preds_s = 0
-        loss_s = 0
+    loss_batch = {}
+    pred_batch = {}
+    total_loss_batch = 0
+    total_auc_batch = []
+    for batch_data,batch_label in tqdm(dataloader['valid'],ncols=75):
+        total_loss = 0
+        total_auc = []
+        preds_each = {}
+        loss_each = {}
         for s in range(config.num_samples):
-            preds, loss = preds_each[s][task_id], loss_each[s][task_id]
-            preds_s += preds 
-            loss_s += loss
-        preds = preds_s / config.num_samples
-        loss = loss_s / config.num_samples
-        auc = roc_auc_score(valid_y_numpy[:,task_id:task_id+1],preds)
-        total_loss += loss 
-        total_auc.append(auc)
-        print ("Task:",task_id,"   Loss:",loss,"   AUC:",auc)
+            preds_each[s],loss_each[s] = sess.run([net.preds_each,net.loss_each], feed_dict={net.x:valid_x,net.y:valid_y})
+        
+        for task_id in range(config.num_tasks):
+            preds_s = 0
+            loss_s = 0
+            for s in range(config.num_samples):
+                preds, loss = preds_each[s][task_id], loss_each[s][task_id]
+                preds_s += preds 
+                loss_s += loss
+            preds = preds_s / config.num_samples
+            loss = loss_s / config.num_samples
+            preds_batch[task_id].append(preds)
+            loss_batch[task_id] += loss
+    for task_id in range(config.num_tasks):
+        auc = roc_auc_score(valid_y_numpy[:,task_id:task_id+1],np.concatenate(preds_batch[task_id],0))
+        print ("Task:",task_id,"   Loss:",loss_batch[task_id]/len(dataloader['valid']),"   AUC:",auc)
+        total_loss_batch += loss_batch[task_id]/len(dataloader['valid'])
+        total_auc_batch.append(auc)
     print("Total loss:",total_loss)
-    return total_loss, total_auc
+    return total_loss_batch, total_auc_batch
 
 
 def train(e=0):
