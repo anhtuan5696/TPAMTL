@@ -13,6 +13,7 @@ from sklearn.metrics import roc_auc_score
 from datetime import datetime
 from tqdm import tqdm
 import pickle
+from collections import defaultdict
 
 
 
@@ -113,8 +114,8 @@ def train_epoch():
 def valid_epoch():
     print("--------------------------------------------------------")
     print("Performance on valid set")
-    loss_batch = {}
-    preds_batch = {}
+    loss_batch = defaultdict(float)
+    preds_batch = defaultdict(list)
     total_loss_batch = 0
     total_auc_batch = []
     for batch_data,batch_label in tqdm(dataloader['valid'],ncols=75):
