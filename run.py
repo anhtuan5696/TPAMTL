@@ -136,11 +136,12 @@ def valid_epoch():
             preds = preds_s / config.num_samples
             loss = loss_s / config.num_samples
             preds_batch[task_id].append(preds)
-            loss_batch[task_id] += loss
+            loss_batch[task_id] += loss*batch_data.shape[0]
     for task_id in range(config.num_tasks):
+        loss_batch[task_id]=loss_batch[task_id]/valid_y_numpy.shape[0]
         auc = roc_auc_score(valid_y_numpy[:,task_id:task_id+1],np.concatenate(preds_batch[task_id],0))
-        print ("Task:",task_id,"   Loss:",loss_batch[task_id]/len(dataloader['valid']),"   AUC:",auc)
-        total_loss_batch += loss_batch[task_id]/len(dataloader['valid'])
+        print ("Task:",task_id,"   Loss:",loss_batch[task_id],"   AUC:",auc)
+        total_loss_batch += loss_batch[task_id]
         total_auc_batch.append(auc)
     print("Total loss:",total_loss_batch)
     return total_loss_batch, total_auc_batch
@@ -214,11 +215,12 @@ def inference():
             preds = preds_s / config.num_samples
             loss = loss_s / config.num_samples
             preds_batch[task_id].append(preds)
-            loss_batch[task_id] += loss
+            loss_batch[task_id] += loss*batch_data.shape[0]
     for task_id in range(config.num_tasks):
+        loss_batch[task_id] = loss_batch[task_id]/test_y_numpy.shape[0]
         auc = roc_auc_score(test_y_numpy[:,task_id:task_id+1],np.concatenate(preds_batch[task_id],0))
-        print ("Task:",task_id,"   Loss:",loss_batch[task_id]/len(dataloader['test']),"   AUC:",auc)
-        total_loss_batch += loss_batch[task_id]/len(dataloader['test'])
+        print ("Task:",task_id,"   Loss:",loss_batch[task_id],"   AUC:",auc)
+        total_loss_batch += loss_batch[task_id]
         total_auc_batch.append(auc)
     print("Total loss:",total_loss_batch)
     return total_loss_batch, total_auc_batch
