@@ -124,7 +124,7 @@ def valid_epoch():
         preds_each = {}
         loss_each = {}
         for s in range(config.num_samples):
-            preds_each[s],loss_each[s] = sess.run([net.preds_each,net.loss_each], feed_dict={net.x:valid_x,net.y:valid_y})
+            preds_each[s],loss_each[s] = sess.run([net.preds_each,net.loss_each], feed_dict={net.x:batch_data,net.y:batch_label})
         
         for task_id in range(config.num_tasks):
             preds_s = 0
@@ -138,7 +138,6 @@ def valid_epoch():
             preds_batch[task_id].append(preds)
             loss_batch[task_id] += loss
     for task_id in range(config.num_tasks):
-        import pdb; pdb.set_trace()
         auc = roc_auc_score(valid_y_numpy[:,task_id:task_id+1],np.concatenate(preds_batch[task_id],0))
         print ("Task:",task_id,"   Loss:",loss_batch[task_id]/len(dataloader['valid']),"   AUC:",auc)
         total_loss_batch += loss_batch[task_id]/len(dataloader['valid'])
