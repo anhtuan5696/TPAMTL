@@ -114,7 +114,7 @@ def valid_epoch():
     print("--------------------------------------------------------")
     print("Performance on valid set")
     loss_batch = {}
-    pred_batch = {}
+    preds_batch = {}
     total_loss_batch = 0
     total_auc_batch = []
     for batch_data,batch_label in tqdm(dataloader['valid'],ncols=75):
